@@ -115,7 +115,7 @@ CLASS org.eclipse.jgit.api.CreateBranchCommand
 METHOD call
 AT THROW
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[Error][branch] An error occurred while create local branch: " + $0.startPoint + " -> " + $0.name);
+DO traceln("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t[Error][branch] An error occurred while create local branch: " + $0.startPoint + " -> " + $0.name);
 traceStack(null, "log")
 ENDRULE
 
