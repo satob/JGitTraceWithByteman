@@ -1,0 +1,38 @@
+RULE CheckoutCommand Open
+CLASS org.eclipse.jgit.api.CheckoutCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman.log")
+ENDRULE
+
+RULE CheckoutCommand Start
+CLASS org.eclipse.jgit.api.CheckoutCommand
+METHOD call
+AT ENTRY
+IF true
+DO traceln("log", "[Start][checkout] Start checkout branch: " + $0.name)
+ENDRULE
+
+RULE CheckoutCommand End
+CLASS org.eclipse.jgit.api.CheckoutCommand
+METHOD call
+AT EXIT
+IF true
+DO traceln("log", "[End][checkout] Checkout branch successfully: " + $0.name)
+ENDRULE
+
+RULE CheckoutCommand Error
+CLASS org.eclipse.jgit.api.CheckoutCommand
+METHOD call
+AT THROW
+IF true
+DO traceln("log", "[Error][checkout] An error occurred while checkout: " + $0.name)
+ENDRULE
+
+RULE CheckoutCommand Close
+CLASS org.eclipse.jgit.api.CheckoutCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
