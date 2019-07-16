@@ -13,7 +13,9 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT ENTRY
 IF true
-DO traceln(String.valueOf(System.currentTimeMillis()) + "\t[Start][checkout] Start checkout branch: " + $0.name)
+# DO traceln(String.valueOf(System.currentTimeMillis()) + "\t[Start][checkout] Start checkout branch: " + $0.name)
+# DO traceln("log", java.text.DateFormat.getDateInstance().format(java.util.Date.from(java.time.Instant.now())) + "\t[Start][checkout] Start checkout branch: " + $0.name)
+DO traceln("log", java.time.Instant.now().toString() + "\t[Start][checkout] Start checkout branch: " + $0.name)
 ENDRULE
 
 RULE CheckoutCommand End
@@ -21,7 +23,7 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT EXIT
 IF true
-DO traceln("log", "[End][checkout] Checkout branch successfully: " + $0.name)
+DO traceln("log", java.time.Instant.now().toString() + "\t[End][checkout] Checkout branch successfully: " + $0.name)
 ENDRULE
 
 RULE CheckoutCommand Error
@@ -29,7 +31,7 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT THROW
 IF true
-DO traceln("log", "[Error][checkout] An error occurred while checkout: " + $0.name)
+DO traceln("log", java.time.Instant.now().toString() + "\t[Error][checkout] An error occurred while checkout: " + $0.name)
 ENDRULE
 
 RULE CheckoutCommand Close
