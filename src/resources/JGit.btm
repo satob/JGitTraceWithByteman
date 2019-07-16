@@ -5,7 +5,7 @@ RULE CheckoutCommand Open
 CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 IF true
-DO traceOpen("log","byteman.log")
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
 ENDRULE
 
 RULE CheckoutCommand Start
@@ -13,7 +13,9 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT ENTRY
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[Start][checkout] Start checkout branch: " + $0.name)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][checkout] Start checkout branch: " + $0.name);
 ENDRULE
 
 RULE CheckoutCommand End
@@ -21,7 +23,9 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT EXIT
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[End][checkout] Checkout branch successfully: " + $0.name)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][checkout] Checkout branch successfully: " + $0.name);
 ENDRULE
 
 RULE CheckoutCommand Error
@@ -29,7 +33,11 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT THROW
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[Error][checkout] An error occurred while checkout: " + $0.name)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][checkout] An error occurred while checkout: " + $0.name);
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
 ENDRULE
 
 RULE CheckoutCommand Close
@@ -48,7 +56,7 @@ RULE CloneCommand Open
 CLASS org.eclipse.jgit.api.CloneCommand
 METHOD call
 IF true
-DO traceOpen("log","byteman.log")
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
 ENDRULE
 
 RULE CloneCommand Start
@@ -56,7 +64,9 @@ CLASS org.eclipse.jgit.api.CloneCommand
 METHOD call
 AT ENTRY
 IF true
-DO traceln("log", "[Start][Clone] Start clone repository: " + $0.uri)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][clone] Start clone repository: " + $0.uri);
 ENDRULE
 
 RULE CloneCommand End
@@ -64,7 +74,9 @@ CLASS org.eclipse.jgit.api.CloneCommand
 METHOD call
 AT EXIT
 IF true
-DO traceln("log", "[End][Clone] Clone repository successfully: " + $0.uri)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][clone] Clone repository successfully: " + $0.uri);
 ENDRULE
 
 RULE CloneCommand Error
@@ -72,7 +84,11 @@ CLASS org.eclipse.jgit.api.CloneCommand
 METHOD call
 AT THROW
 IF true
-DO traceln("log", "[Error][Clone] An error occurred while clone repository: " + $0.uri)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri);
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
 ENDRULE
 
 RULE CloneCommand Close
@@ -99,7 +115,9 @@ CLASS org.eclipse.jgit.api.CreateBranchCommand
 METHOD call
 AT ENTRY
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[Start][branch] Start create local branch: " + $0.startPoint + " -> " + $0.name)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][branch] Start create local branch: " + $0.startPoint + " -> " + $0.name);
 ENDRULE
 
 RULE CreateBranchCommand End
@@ -107,7 +125,9 @@ CLASS org.eclipse.jgit.api.CreateBranchCommand
 METHOD call
 AT EXIT
 IF true
-DO traceln("log", java.time.Instant.now().toString() + "\t[End][branch] Create local branch successfully: " + $0.startPoint + " -> " + $0.name)
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][branch] Create local branch successfully: " + $0.startPoint + " -> " + $0.name);
 ENDRULE
 
 RULE CreateBranchCommand Error
@@ -129,5 +149,4 @@ AT EXIT
 IF true
 DO traceClose("log")
 ENDRULE
-
 
