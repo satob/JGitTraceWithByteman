@@ -13,8 +13,6 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT ENTRY
 IF true
-# DO traceln(String.valueOf(System.currentTimeMillis()) + "\t[Start][checkout] Start checkout branch: " + $0.name)
-# DO traceln("log", java.text.DateFormat.getDateInstance().format(java.util.Date.from(java.time.Instant.now())) + "\t[Start][checkout] Start checkout branch: " + $0.name)
 DO traceln("log", java.time.Instant.now().toString() + "\t[Start][checkout] Start checkout branch: " + $0.name)
 ENDRULE
 
@@ -84,4 +82,49 @@ AT EXIT
 IF true
 DO traceClose("log")
 ENDRULE
+
+
+#############################################################################
+# CreateBranch Command
+#############################################################################
+RULE CreateBranchCommand Open
+CLASS org.eclipse.jgit.api.CreateBranchCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman.log")
+ENDRULE
+
+RULE CreateBranchCommand Start
+CLASS org.eclipse.jgit.api.CreateBranchCommand
+METHOD call
+AT ENTRY
+IF true
+DO traceln("log", java.time.Instant.now().toString() + "\t[Start][branch] Start create local branch: " + $0.startPoint + " -> " + $0.name)
+ENDRULE
+
+RULE CreateBranchCommand End
+CLASS org.eclipse.jgit.api.CreateBranchCommand
+METHOD call
+AT EXIT
+IF true
+DO traceln("log", java.time.Instant.now().toString() + "\t[End][branch] Create local branch successfully: " + $0.startPoint + " -> " + $0.name)
+ENDRULE
+
+RULE CreateBranchCommand Error
+CLASS org.eclipse.jgit.api.CreateBranchCommand
+METHOD call
+AT THROW
+IF true
+DO traceln("log", java.time.Instant.now().toString() + "\t[Error][branch] An error occurred while create local branch: " + $0.startPoint + " -> " + $0.name);
+traceStack(null, "log")
+ENDRULE
+
+RULE CreateBranchCommand Close
+CLASS org.eclipse.jgit.api.CreateBranchCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
 
