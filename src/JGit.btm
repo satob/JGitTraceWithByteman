@@ -1,3 +1,6 @@
+#############################################################################
+# Checkout Command
+#############################################################################
 RULE CheckoutCommand Open
 CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
@@ -10,7 +13,7 @@ CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT ENTRY
 IF true
-DO traceln("log", "[Start][checkout] Start checkout branch: " + $0.name)
+DO traceln(String.valueOf(System.currentTimeMillis()) + "\t[Start][checkout] Start checkout branch: " + $0.name)
 ENDRULE
 
 RULE CheckoutCommand End
@@ -36,3 +39,47 @@ AT EXIT
 IF true
 DO traceClose("log")
 ENDRULE
+
+
+#############################################################################
+# Clone Command
+#############################################################################
+RULE CloneCommand Open
+CLASS org.eclipse.jgit.api.CloneCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman.log")
+ENDRULE
+
+RULE CloneCommand Start
+CLASS org.eclipse.jgit.api.CloneCommand
+METHOD call
+AT ENTRY
+IF true
+DO traceln("log", "[Start][Clone] Start clone repository: " + $0.uri)
+ENDRULE
+
+RULE CloneCommand End
+CLASS org.eclipse.jgit.api.CloneCommand
+METHOD call
+AT EXIT
+IF true
+DO traceln("log", "[End][Clone] Clone repository successfully: " + $0.uri)
+ENDRULE
+
+RULE CloneCommand Error
+CLASS org.eclipse.jgit.api.CloneCommand
+METHOD call
+AT THROW
+IF true
+DO traceln("log", "[Error][Clone] An error occurred while clone repository: " + $0.uri)
+ENDRULE
+
+RULE CloneCommand Close
+CLASS org.eclipse.jgit.api.CloneCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
