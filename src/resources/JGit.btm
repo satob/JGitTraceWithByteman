@@ -91,7 +91,7 @@ RULE CreateBranchCommand Open
 CLASS org.eclipse.jgit.api.CreateBranchCommand
 METHOD call
 IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + ".log")
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
 ENDRULE
 
 RULE CreateBranchCommand Start
