@@ -1,5 +1,5 @@
 #############################################################################
-# Checkout Command
+# CheckoutCommand
 #############################################################################
 RULE CheckoutCommand Open
 CLASS org.eclipse.jgit.api.CheckoutCommand
@@ -50,7 +50,7 @@ ENDRULE
 
 
 #############################################################################
-# Clone Command
+# CloneCommand
 #############################################################################
 RULE CloneCommand Open
 CLASS org.eclipse.jgit.api.CloneCommand
@@ -66,7 +66,7 @@ AT ENTRY
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[Start][clone] Start clone repository: " + $0.uri);
+  traceln("log", "[Start][clone] Start clone repository: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
 RULE CloneCommand End
@@ -76,7 +76,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][clone] Clone repository successfully: " + $0.uri);
+  traceln("log", "[End][clone] Clone repository successfully: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
 RULE CloneCommand Error
@@ -86,7 +86,7 @@ AT THROW
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri);
+  traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri + " -> " + $0.branch);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
 ENDRULE
@@ -101,7 +101,7 @@ ENDRULE
 
 
 #############################################################################
-# CreateBranch Command
+# CreateBranchCommand
 #############################################################################
 RULE CreateBranchCommand Open
 CLASS org.eclipse.jgit.api.CreateBranchCommand
@@ -149,4 +149,5 @@ AT EXIT
 IF true
 DO traceClose("log")
 ENDRULE
+
 
