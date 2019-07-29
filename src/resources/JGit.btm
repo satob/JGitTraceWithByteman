@@ -151,3 +151,179 @@ DO traceClose("log")
 ENDRULE
 
 
+#############################################################################
+# CommitCommand
+#############################################################################
+RULE CommitCommand Open
+CLASS org.eclipse.jgit.api.CommitCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE CommitCommand Start
+CLASS org.eclipse.jgit.api.CommitCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][commit] Start commit to branch: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CommitCommand End
+CLASS org.eclipse.jgit.api.CommitCommand
+METHOD call
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][commit] Commit to branch successfully: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CommitCommand Error
+CLASS org.eclipse.jgit.api.CommitCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][commit] An error occurred while commit to branch: " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE CommitCommand Close
+CLASS org.eclipse.jgit.api.CommitCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
+# FetchCommand
+#############################################################################
+RULE FetchCommand Open
+CLASS org.eclipse.jgit.api.FetchCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE FetchCommand Start
+CLASS org.eclipse.jgit.api.FetchCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][fetch] Start fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE FetchCommand End
+CLASS org.eclipse.jgit.api.FetchCommand
+METHOD call
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][fetch] Fetch from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE FetchCommand Error
+CLASS org.eclipse.jgit.api.FetchCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][fetch] An error occurred while fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE FetchCommand Close
+CLASS org.eclipse.jgit.api.FetchCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
+# CherryPickCommand
+#############################################################################
+RULE CherryPickCommand Open
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE CherryPickCommand Start
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][cherry-pick] Start cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CherryPickCommand End
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("Ok")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][cherry-pick] Cherry-pick commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CherryPickCommand Conflicting
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("Conflicting")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][cherry-pick] Cherry-pick commit conflicted: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CherryPickCommand Failed
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("Failed")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][cherry-pick] Cherry-pick commit failed: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE CherryPickCommand Error
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][cherry-pick] An error occurred while cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE CherryPickCommand Close
+CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
