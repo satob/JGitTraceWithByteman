@@ -414,12 +414,48 @@ $CherryPickCommand `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Add-Content -Path ".\JGit.btm" -Encoding Byte
 
-$MergeCommand `
-    | % { [Text.Encoding]::UTF8.GetBytes($_) } `
-    | Add-Content -Path ".\JGit.btm" -Encoding Byte
-
 $JSON2 = @'
 [
+ {
+   template: '$ExtendedTemplate',
+   class: 'MergeCommand',
+   start: '[merge] Start merge: ',
+   end: '[merge] Merged successfully: ',
+   error: '[merge] An error occurred while merge: ',
+   conflict: '[merge] Merge conflicted: ',
+   failed: '[merge] Merge failed: ',
+   var: '$0.getRepository().getBranch()',
+   normalCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Fast-forward")',
+     'OR',
+     'ret.equals("Fast-forward-squashed")',
+     'OR',
+     'ret.equals("Already-up-to-date")',
+     'OR',
+     'ret.equals("Merged")',
+     'OR',
+     'ret.equals("Merged-squashed")',
+     'OR',
+     'ret.equals("Merged-squashed-not-committed")',
+     'OR',
+     'ret.equals("Merged-not-committed")'
+   ],
+   conflictCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Conflicting")',
+     'OR',
+     'ret.equals("Checkout Conflict")'
+   ],
+   failedCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Failed")',
+     'OR',
+     'ret.equals("Aborted")',
+     'OR',
+     'ret.equals("Not-yet-supported")'
+   ]
+ },
  {
    template: '$ExtendedTemplate',
    class: 'RebaseCommand',
