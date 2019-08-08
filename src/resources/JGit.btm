@@ -14,7 +14,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][checkout] Start checkout branch: " + $0.name);
 ENDRULE
 
@@ -24,7 +24,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][checkout] Checkouted branch successfully: " + $0.name);
 ENDRULE
 
@@ -34,7 +34,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][checkout] An error occurred while checkout: " + $0.name);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -65,7 +65,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][clone] Start clone repository: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
@@ -75,7 +75,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][clone] Cloned repository successfully: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
@@ -85,7 +85,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri + " -> " + $0.branch);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -116,7 +116,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][branch] Start create local branch: " + $0.startPoint + " -> " + $0.name);
 ENDRULE
 
@@ -126,7 +126,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][branch] Created local branch successfully: " + $0.startPoint + " -> " + $0.name);
 ENDRULE
 
@@ -136,7 +136,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][branch] An error occurred while create local branch: " + $0.startPoint + " -> " + $0.name);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -167,7 +167,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][commit] Start commit to branch: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -177,7 +177,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][commit] Commited to branch successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -187,7 +187,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][commit] An error occurred while commit to branch: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -218,7 +218,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][fetch] Start fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -228,7 +228,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][fetch] Fetched from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -238,7 +238,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][fetch] An error occurred while fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -269,7 +269,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][pull] Start pull from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
 ENDRULE
 
@@ -279,7 +279,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][pull] Pulled from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
 ENDRULE
 
@@ -289,7 +289,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][pull] An error occurred while pull: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -320,7 +320,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][push] Start push to remote: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
 ENDRULE
 
@@ -330,7 +330,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][push] Pushed to remote successfully: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
 ENDRULE
 
@@ -340,7 +340,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][push] An error occurred while push: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -371,7 +371,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][reset] Start reset to remote: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
 ENDRULE
 
@@ -381,7 +381,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][reset] Reset successfully: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
 ENDRULE
 
@@ -391,7 +391,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][reset] An error occurred while reset: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -422,7 +422,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][revert] Start revert: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -432,7 +432,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][revert] Revert successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -442,7 +442,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][revert] An error occurred while revert: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -473,7 +473,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][stash apply] Start apply stash to branch: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -483,7 +483,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][stash apply] Apply stash to branch successfully: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -493,7 +493,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][stash apply] An error occurred while apply stash to branch: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -524,7 +524,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][stash create] Start creating stash: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -534,7 +534,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][stash create] Created stash successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -544,7 +544,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][stash create] An error occurred while creating stash: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -575,7 +575,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][cherry-pick] Start cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -586,7 +586,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Ok")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][cherry-pick] Cherry-picked commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -597,7 +597,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Conflicting")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit conflicted: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -608,7 +608,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Failed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit failed: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -618,7 +618,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] An error occurred while cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -649,7 +649,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][merge] Start merge: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -672,7 +672,7 @@ ret.equals("Merged-squashed-not-committed")
 OR
 ret.equals("Merged-not-committed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][merge] Merged successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -685,7 +685,7 @@ IF ret.equals("Conflicting")
 OR
 ret.equals("Checkout Conflict")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] Merge conflicted: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -700,7 +700,7 @@ ret.equals("Aborted")
 OR
 ret.equals("Not-yet-supported")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] Merge failed: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -710,7 +710,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] An error occurred while merge: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -741,7 +741,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][rebase] Start rebase: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -758,7 +758,7 @@ ret.equals("FAST_FORWARD")
 OR
 ret.equals("NOTHING_TO_COMMIT")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][rebase] Rebased branch successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -771,7 +771,7 @@ IF ret.equals("CONFLICTS")
 OR
 ret.equals("STASH_APPLY_CONFLICTS")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch conflicted: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -792,7 +792,7 @@ ret.equals("UNCOMMITTED_CHANGES")
 OR
 ret.equals("INTERACTIVE_PREPARED")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch failed: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -802,7 +802,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] An error occurred while rebase: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
