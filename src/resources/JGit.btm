@@ -474,7 +474,7 @@ AT ENTRY
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[Start][stash apply] Start apply stash to branch : " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
+  traceln("log", "[Start][stash apply] Start apply stash to branch: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
 RULE StashApplyCommand End
@@ -501,6 +501,57 @@ ENDRULE
 
 RULE StashApplyCommand Close
 CLASS org.eclipse.jgit.api.StashApplyCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
+# StashCreateCommand
+#############################################################################
+RULE StashCreateCommand Open
+CLASS org.eclipse.jgit.api.StashCreateCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE StashCreateCommand Start
+CLASS org.eclipse.jgit.api.StashCreateCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][stash create] Start creating stash: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE StashCreateCommand End
+CLASS org.eclipse.jgit.api.StashCreateCommand
+METHOD call
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][stash create] Created stash successfully: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE StashCreateCommand Error
+CLASS org.eclipse.jgit.api.StashCreateCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][stash create] An error occurred while creating stash: " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE StashCreateCommand Close
+CLASS org.eclipse.jgit.api.StashCreateCommand
 METHOD call
 AT EXIT
 IF true

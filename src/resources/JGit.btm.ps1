@@ -121,10 +121,17 @@ $JSON = @'
  },
  {
    class: 'StashApplyCommand',
-   start: '[stash apply] Start apply stash to branch : ',
+   start: '[stash apply] Start apply stash to branch: ',
    end: '[stash apply] Apply stash to branch successfully: ',
    error: '[stash apply] An error occurred while apply stash to branch: ',
    var: '$0.getStashId().getName() + " -> " + $0.getRepository().getBranch()'
+ },
+ {
+   class: 'StashCreateCommand',
+   start: '[stash create] Start creating stash: ',
+   end: '[stash create] Created stash successfully: ',
+   error: '[stash create] An error occurred while creating stash: ',
+   var: '$0.getRepository().getBranch()'
  }
 ]
 '@
