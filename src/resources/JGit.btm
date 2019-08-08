@@ -152,57 +152,6 @@ ENDRULE
 
 
 #############################################################################
-# DeleteBranchCommand
-#############################################################################
-RULE DeleteBranchCommand Open
-CLASS org.eclipse.jgit.api.DeleteBranchCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
-RULE DeleteBranchCommand Start
-CLASS org.eclipse.jgit.api.DeleteBranchCommand
-METHOD call
-AT ENTRY
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[Start][delete] Start delete branch: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE DeleteBranchCommand End
-CLASS org.eclipse.jgit.api.DeleteBranchCommand
-METHOD call
-AT EXIT
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][delete] Deleted branch successfully: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE DeleteBranchCommand Error
-CLASS org.eclipse.jgit.api.DeleteBranchCommand
-METHOD call
-AT THROW
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[Error][delete] An error occurred while delete branch: " + $0.getRepository().getBranch());
-  traceln("log", $^.getMessage());
-  traceStack(null, "log");
-ENDRULE
-
-RULE DeleteBranchCommand Close
-CLASS org.eclipse.jgit.api.DeleteBranchCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
-ENDRULE
-
-
-#############################################################################
 # CommitCommand
 #############################################################################
 RULE CommitCommand Open
