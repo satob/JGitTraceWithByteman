@@ -78,6 +78,13 @@ $JSON = @'
    var: '$0.startPoint + " -> " + $0.name'
  },
  {
+   class: 'DeleteBranchCommand',
+   start: '[delete] Start delete branch: ',
+   end: '[delete] Deleted branch successfully: ',
+   error: '[delete] An error occurred while delete branch: ',
+   var: '$0.getRepository().getBranch()'
+ },
+ {
    class: 'CommitCommand',
    start: '[commit] Start commit to branch: ',
    end: '[commit] Commited to branch successfully: ',
