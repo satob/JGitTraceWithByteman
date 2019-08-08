@@ -136,6 +136,8 @@ ENDRULE
 
 '@
 
+
+# Trace settings for standard JGit commands
 $JSON = @'
 [
  {
@@ -230,6 +232,7 @@ $JSON = @'
 '@
 
 
+# Trace settings for special JGit commands (with conflict)
 $ExtendedJSON = @'
 [
  {
