@@ -1,5 +1,5 @@
 ﻿
-$Template = @'
+$StandardTemplate = @'
 #############################################################################
 # {0}
 #############################################################################
@@ -54,9 +54,86 @@ ENDRULE
 
 '@
 
+
+$ExtendedTemplate = @'
+#############################################################################
+# {0}
+#############################################################################
+RULE {0} Open
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE {0} Start
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", {5} + "\t");
+  traceln("log", "[Start]{1}" + {4});
+ENDRULE
+
+RULE {0} End
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT EXIT
+{6}
+DO
+  trace("log", {5} + "\t");
+  traceln("log", "[End]{2}" + {4});
+ENDRULE
+
+RULE {0} Conflicting
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT EXIT
+{7}
+DO
+  trace("log", {5} + "\t");
+  traceln("log", "[Error]{8}" + {4});
+ENDRULE
+
+RULE {0} Failed
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT EXIT
+{9}
+DO
+  trace("log", {5} + "\t");
+  traceln("log", "[Error]{10}" + {4});
+ENDRULE
+
+RULE {0} Error
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", {5} + "\t");
+  traceln("log", "[Error]{3}" + {4});
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE {0} Close
+CLASS org.eclipse.jgit.api.{0}
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+
+'@
+
 $JSON = @'
 [
  {
+   template: '$StandardTemplate',
    class: 'CheckoutCommand',
    start: '[checkout] Start checkout branch: ',
    end: '[checkout] Checkouted branch successfully: ',
@@ -64,6 +141,7 @@ $JSON = @'
    var: '$0.name'
  },
  {
+   template: '$StandardTemplate',
    class: 'CloneCommand',
    start: '[clone] Start clone repository: ',
    end: '[clone] Cloned repository successfully: ',
@@ -71,6 +149,7 @@ $JSON = @'
    var: '$0.uri + " -> " + $0.branch'
  },
  {
+   template: '$StandardTemplate',
    class: 'CreateBranchCommand',
    start: '[branch] Start create local branch: ',
    end: '[branch] Created local branch successfully: ',
@@ -78,6 +157,7 @@ $JSON = @'
    var: '$0.startPoint + " -> " + $0.name'
  },
  {
+   template: '$StandardTemplate',
    class: 'CommitCommand',
    start: '[commit] Start commit to branch: ',
    end: '[commit] Commited to branch successfully: ',
@@ -85,6 +165,7 @@ $JSON = @'
    var: '$0.getRepository().getBranch()'
  },
  {
+   template: '$StandardTemplate',
    class: 'FetchCommand',
    start: '[fetch] Start fetch from remote: ',
    end: '[fetch] Fetched from remote successfully: ',
@@ -92,6 +173,7 @@ $JSON = @'
    var: '$0.getRemote() + " -> " + $0.getRepository().getBranch()'
  },
  {
+   template: '$StandardTemplate',
    class: 'PullCommand',
    start: '[pull] Start pull from remote: ',
    end: '[pull] Pulled from remote successfully: ',
@@ -99,6 +181,7 @@ $JSON = @'
    var: '$0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName()'
  },
  {
+   template: '$StandardTemplate',
    class: 'PushCommand',
    start: '[push] Start push to remote: ',
    end: '[push] Pushed to remote successfully: ',
@@ -106,6 +189,7 @@ $JSON = @'
    var: '$0.getRepository().getBranch() + " -> " + $0.getRemote()'
  },
  {
+   template: '$StandardTemplate',
    class: 'ResetCommand',
    start: '[reset] Start reset to remote: ',
    end: '[reset] Reset successfully: ',
@@ -113,6 +197,7 @@ $JSON = @'
    var: '$0.getRepository().getBranch() + " / " + $0.getRefOrHEAD()'
  },
  {
+   template: '$StandardTemplate',
    class: 'RevertCommand',
    start: '[revert] Start revert: ',
    end: '[revert] Revert successfully: ',
@@ -120,6 +205,7 @@ $JSON = @'
    var: '$0.getRepository().getBranch()'
  },
  {
+   template: '$StandardTemplate',
    class: 'StashApplyCommand',
    start: '[stash apply] Start apply stash to branch: ',
    end: '[stash apply] Apply stash to branch successfully: ',
@@ -127,6 +213,7 @@ $JSON = @'
    var: '$0.getStashId().getName() + " -> " + $0.getRepository().getBranch()'
  },
  {
+   template: '$StandardTemplate',
    class: 'StashCreateCommand',
    start: '[stash create] Start creating stash: ',
    end: '[stash create] Created stash successfully: ',
@@ -407,7 +494,7 @@ ENDRULE
 
 '@
 
-ConvertFrom-Json $JSON | ForEach-Object { $_ } | ForEach-Object { ($Template -F $_.class, $_.start, $_.end, $_.error, $_.var) } `
+ConvertFrom-Json $JSON | ForEach-Object { $_ } | ForEach-Object { $template = $_.template; (Invoke-Expression "Write-Output $template") -F $_.class, $_.start, $_.end, $_.error, $_.var } `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Set-Content -Path ".\JGit.btm" -Encoding Byte
 
