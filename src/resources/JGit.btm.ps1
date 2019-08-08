@@ -16,7 +16,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Start]{1}" + {4});
 ENDRULE
 
@@ -26,7 +26,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[End]{2}" + {4});
 ENDRULE
 
@@ -36,7 +36,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error]{3}" + {4});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -154,7 +154,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Start][cherry-pick] Start cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -165,7 +165,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Ok")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[End][cherry-pick] Cherry-picked commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -176,7 +176,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Conflicting")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit conflicted: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -187,7 +187,7 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Failed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit failed: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -197,7 +197,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][cherry-pick] An error occurred while cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -232,7 +232,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Start][merge] Start merge: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -255,7 +255,7 @@ ret.equals("Merged-squashed-not-committed")
 OR
 ret.equals("Merged-not-committed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[End][merge] Merged successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -268,7 +268,7 @@ IF ret.equals("Conflicting")
 OR
 ret.equals("Checkout Conflict")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][merge] Merge conflicted: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -283,7 +283,7 @@ ret.equals("Aborted")
 OR
 ret.equals("Not-yet-supported")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][merge] Merge failed: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -293,7 +293,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][merge] An error occurred while merge: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -328,7 +328,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Start][rebase] Start rebase: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -345,7 +345,7 @@ ret.equals("FAST_FORWARD")
 OR
 ret.equals("NOTHING_TO_COMMIT")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[End][rebase] Rebased branch successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -358,7 +358,7 @@ IF ret.equals("CONFLICTS")
 OR
 ret.equals("STASH_APPLY_CONFLICTS")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch conflicted: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -379,7 +379,7 @@ ret.equals("UNCOMMITTED_CHANGES")
 OR
 ret.equals("INTERACTIVE_PREPARED")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch failed: " + $0.getRepository().getBranch());
 ENDRULE
 
@@ -389,7 +389,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t" + $0.getRepository().getDirectory().getName() + "\t");
   traceln("log", "[Error][rebase] An error occurred while rebase: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
