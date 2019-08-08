@@ -1,49 +1,52 @@
-﻿
+$LogHeader = @'
+java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName()
+'@
+
 $StandardTemplate = @'
 #############################################################################
-# {0}
+# {1}
 #############################################################################
-RULE {0} Open
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Open
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 IF true
 DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
 ENDRULE
 
-RULE {0} Start
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Start
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Start]{1}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Start]{2}" + {5});
 ENDRULE
 
-RULE {0} End
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} End
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[End]{2}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[End]{3}" + {5});
 ENDRULE
 
-RULE {0} Error
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Error
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error]{3}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Error]{4}" + {5});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
 ENDRULE
 
-RULE {0} Close
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Close
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 IF true
@@ -57,69 +60,69 @@ ENDRULE
 
 $ExtendedTemplate = @'
 #############################################################################
-# {0}
+# {1}
 #############################################################################
-RULE {0} Open
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Open
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 IF true
 DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
 ENDRULE
 
-RULE {0} Start
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Start
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", {5} + "\t");
-  traceln("log", "[Start]{1}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Start]{2}" + {5});
 ENDRULE
 
-RULE {0} End
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} End
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 {6}
 DO
-  trace("log", {5} + "\t");
-  traceln("log", "[End]{2}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[End]{3}" + {5});
 ENDRULE
 
-RULE {0} Conflicting
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Conflicting
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 {7}
 DO
-  trace("log", {5} + "\t");
-  traceln("log", "[Error]{8}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Error]{8}" + {5});
 ENDRULE
 
-RULE {0} Failed
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Failed
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 {9}
 DO
-  trace("log", {5} + "\t");
-  traceln("log", "[Error]{10}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Error]{10}" + {5});
 ENDRULE
 
-RULE {0} Error
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Error
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT THROW
 IF true
 DO
-  trace("log", {5} + "\t");
-  traceln("log", "[Error]{3}" + {4});
+  trace("log", {0} + "\t");
+  traceln("log", "[Error]{4}" + {5});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
 ENDRULE
 
-RULE {0} Close
-CLASS org.eclipse.jgit.api.{0}
+RULE {1} Close
+CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT EXIT
 IF true
@@ -398,103 +401,12 @@ ENDRULE
 
 '@
 
-$RebaseCommand = @'
-#############################################################################
-# RebaseCommand
-#############################################################################
-RULE RebaseCommand Open
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
 
-RULE RebaseCommand Start
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT ENTRY
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Start][rebase] Start rebase: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE RebaseCommand End
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("OK")
-OR
-ret.equals("UP_TO_DATE")
-OR
-ret.equals("FAST_FORWARD")
-OR
-ret.equals("NOTHING_TO_COMMIT")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[End][rebase] Rebased branch successfully: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE RebaseCommand Conflicting
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("CONFLICTS")
-OR
-ret.equals("STASH_APPLY_CONFLICTS")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][rebase] Rebase branch conflicted: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE RebaseCommand Failed
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("ABORTED")
-OR
-ret.equals("STOPPED")
-OR
-ret.equals("EDIT")
-OR
-ret.equals("FAILED")
-OR
-ret.equals("UNCOMMITTED_CHANGES")
-OR
-ret.equals("INTERACTIVE_PREPARED")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][rebase] Rebase branch failed: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE RebaseCommand Error
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT THROW
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][rebase] An error occurred while rebase: " + $0.getRepository().getBranch());
-  traceln("log", $^.getMessage());
-  traceStack(null, "log");
-ENDRULE
-
-RULE RebaseCommand Close
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
-ENDRULE
-
-
-
-'@
-
-ConvertFrom-Json $JSON | ForEach-Object { $_ } | ForEach-Object { $template = $_.template; (Invoke-Expression "Write-Output $template") -F $_.class, $_.start, $_.end, $_.error, $_.var } `
+ConvertFrom-Json $JSON | ForEach-Object { $_ } `
+    | ForEach-Object { 
+        $template = $_.template;
+        (Invoke-Expression "Write-Output $template") -F $LogHeader, $_.class, $_.start, $_.end, $_.error, $_.var
+      } `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Set-Content -Path ".\JGit.btm" -Encoding Byte
 
@@ -506,9 +418,56 @@ $MergeCommand `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Add-Content -Path ".\JGit.btm" -Encoding Byte
 
-$RebaseCommand `
+$JSON2 = @'
+[
+ {
+   template: '$ExtendedTemplate',
+   class: 'RebaseCommand',
+   start: '[rebase] Start rebase: ',
+   end: '[rebase] Rebased branch successfully: ',
+   error: '[rebase] An error occurred while rebase: ',
+   conflict: '[rebase] Rebase branch conflicted: ',
+   failed: '[rebase] Rebase branch failed: ',
+   var: '$0.getRepository().getBranch()',
+   normalCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("OK")',
+     'OR',
+     'ret.equals("UP_TO_DATE")',
+     'OR',
+     'ret.equals("FAST_FORWARD")',
+     'OR',
+     'ret.equals("NOTHING_TO_COMMIT")'
+   ],
+   conflictCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("CONFLICTS")',
+     'OR',
+     'ret.equals("STASH_APPLY_CONFLICTS")'
+   ],
+   failedCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("ABORTED")',
+     'OR',
+     'ret.equals("STOPPED")',
+     'OR',
+     'ret.equals("EDIT")',
+     'OR',
+     'ret.equals("FAILED")',
+     'OR',
+     'ret.equals("UNCOMMITTED_CHANGES")',
+     'OR',
+     'ret.equals("INTERACTIVE_PREPARED")'
+   ]
+ }
+]
+'@
+
+ConvertFrom-Json $JSON2 | ForEach-Object { $_ } `
+    | ForEach-Object { 
+        $template = $_.template;
+        (Invoke-Expression "Write-Output $template") -F $LogHeader, $_.class, $_.start, $_.end, $_.error, $_.var, ($_.normalCondition -join "`n"), ($_.conflictCondition -join "`n"), $_.conflict, ($_.failedCondition -join "`n"), $_.failed
+      } `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Add-Content -Path ".\JGit.btm" -Encoding Byte
-
-
 
