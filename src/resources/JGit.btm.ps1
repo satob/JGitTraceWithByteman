@@ -227,180 +227,94 @@ $JSON = @'
 '@
 
 
-$CherryPickCommand = @'
-#############################################################################
-# CherryPickCommand
-#############################################################################
-RULE CherryPickCommand Open
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
-RULE CherryPickCommand Start
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT ENTRY
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Start][cherry-pick] Start cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE CherryPickCommand End
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("Ok")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[End][cherry-pick] Cherry-picked commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE CherryPickCommand Conflicting
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("Conflicting")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][cherry-pick] Cherry-pick commit conflicted: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE CherryPickCommand Failed
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getStatus().toString()
-IF ret.equals("Failed")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][cherry-pick] Cherry-pick commit failed: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE CherryPickCommand Error
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT THROW
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][cherry-pick] An error occurred while cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
-  traceln("log", $^.getMessage());
-  traceStack(null, "log");
-ENDRULE
-
-RULE CherryPickCommand Close
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
-ENDRULE
-
-
-
+$ExtendedJSON = @'
+[
+ {
+   template: '$ExtendedTemplate',
+   class:    'CherryPickCommand',
+   start:    '[cherry-pick] Start cherry-pick: ',
+   end:      '[cherry-pick] Cherry-picked commit successfully: ',
+   error:    '[cherry-pick] An error occurred while cherry-pick: ',
+   conflict: '[cherry-pick] Cherry-pick commit conflicted: ',
+   failed:   '[cherry-pick] Cherry-pick commit failed: ',
+   var:      '$0.ourCommitName + " -> " + $0.getRepository().getBranch()',
+   normalCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("Ok")'
+   ],
+   conflictCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("Conflicting")'
+   ],
+   failedCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("Failed")'
+   ]
+ },
+ {
+   template: '$ExtendedTemplate',
+   class:    'MergeCommand',
+   start:    '[merge] Start merge: ',
+   end:      '[merge] Merged successfully: ',
+   error:    '[merge] An error occurred while merge: ',
+   conflict: '[merge] Merge conflicted: ',
+   failed:   '[merge] Merge failed: ',
+   var:      '$0.getRepository().getBranch()',
+   normalCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Fast-forward")',
+     'OR', 'ret.equals("Fast-forward-squashed")',
+     'OR', 'ret.equals("Already-up-to-date")',
+     'OR', 'ret.equals("Merged")',
+     'OR', 'ret.equals("Merged-squashed")',
+     'OR', 'ret.equals("Merged-squashed-not-committed")',
+     'OR', 'ret.equals("Merged-not-committed")'
+   ],
+   conflictCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Conflicting")',
+     'OR', 'ret.equals("Checkout Conflict")'
+   ],
+   failedCondition: [
+     'BIND ret = $!.getMergeStatus().toString()',
+     'IF ret.equals("Failed")',
+     'OR', 'ret.equals("Aborted")',
+     'OR', 'ret.equals("Not-yet-supported")'
+   ]
+ },
+ {
+   template: '$ExtendedTemplate',
+   class:    'RebaseCommand',
+   start:    '[rebase] Start rebase: ',
+   end:      '[rebase] Rebased branch successfully: ',
+   error:    '[rebase] An error occurred while rebase: ',
+   conflict: '[rebase] Rebase branch conflicted: ',
+   failed:   '[rebase] Rebase branch failed: ',
+   var:      '$0.getRepository().getBranch()',
+   normalCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("OK")',
+     'OR', 'ret.equals("UP_TO_DATE")',
+     'OR', 'ret.equals("FAST_FORWARD")',
+     'OR', 'ret.equals("NOTHING_TO_COMMIT")'
+   ],
+   conflictCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("CONFLICTS")',
+     'OR', 'ret.equals("STASH_APPLY_CONFLICTS")'
+   ],
+   failedCondition: [
+     'BIND ret = $!.getStatus().toString()',
+     'IF ret.equals("ABORTED")',
+     'OR', 'ret.equals("STOPPED")',
+     'OR', 'ret.equals("EDIT")',
+     'OR', 'ret.equals("FAILED")',
+     'OR', 'ret.equals("UNCOMMITTED_CHANGES")',
+     'OR', 'ret.equals("INTERACTIVE_PREPARED")'
+   ]
+ }
+]
 '@
-
-$MergeCommand = @'
-#############################################################################
-# MergeCommand
-#############################################################################
-RULE MergeCommand Open
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
-RULE MergeCommand Start
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT ENTRY
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Start][merge] Start merge: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE MergeCommand End
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getMergeStatus().toString()
-IF ret.equals("Fast-forward")
-OR
-ret.equals("Fast-forward-squashed")
-OR
-ret.equals("Already-up-to-date")
-OR
-ret.equals("Merged")
-OR
-ret.equals("Merged-squashed")
-OR
-ret.equals("Merged-squashed-not-committed")
-OR
-ret.equals("Merged-not-committed")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[End][merge] Merged successfully: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE MergeCommand Conflicting
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getMergeStatus().toString()
-IF ret.equals("Conflicting")
-OR
-ret.equals("Checkout Conflict")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][merge] Merge conflicted: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE MergeCommand Failed
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT EXIT
-BIND ret = $!.getMergeStatus().toString()
-IF ret.equals("Failed")
-OR
-ret.equals("Aborted")
-OR
-ret.equals("Not-yet-supported")
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][merge] Merge failed: " + $0.getRepository().getBranch());
-ENDRULE
-
-RULE MergeCommand Error
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT THROW
-IF true
-DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
-  traceln("log", "[Error][merge] An error occurred while merge: " + $0.getRepository().getBranch());
-  traceln("log", $^.getMessage());
-  traceStack(null, "log");
-ENDRULE
-
-RULE MergeCommand Close
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
-ENDRULE
-
-
-
-'@
-
 
 ConvertFrom-Json $JSON | ForEach-Object { $_ } `
     | ForEach-Object { 
@@ -410,96 +324,7 @@ ConvertFrom-Json $JSON | ForEach-Object { $_ } `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Set-Content -Path ".\JGit.btm" -Encoding Byte
 
-$CherryPickCommand `
-    | % { [Text.Encoding]::UTF8.GetBytes($_) } `
-    | Add-Content -Path ".\JGit.btm" -Encoding Byte
-
-$JSON2 = @'
-[
- {
-   template: '$ExtendedTemplate',
-   class: 'MergeCommand',
-   start: '[merge] Start merge: ',
-   end: '[merge] Merged successfully: ',
-   error: '[merge] An error occurred while merge: ',
-   conflict: '[merge] Merge conflicted: ',
-   failed: '[merge] Merge failed: ',
-   var: '$0.getRepository().getBranch()',
-   normalCondition: [
-     'BIND ret = $!.getMergeStatus().toString()',
-     'IF ret.equals("Fast-forward")',
-     'OR',
-     'ret.equals("Fast-forward-squashed")',
-     'OR',
-     'ret.equals("Already-up-to-date")',
-     'OR',
-     'ret.equals("Merged")',
-     'OR',
-     'ret.equals("Merged-squashed")',
-     'OR',
-     'ret.equals("Merged-squashed-not-committed")',
-     'OR',
-     'ret.equals("Merged-not-committed")'
-   ],
-   conflictCondition: [
-     'BIND ret = $!.getMergeStatus().toString()',
-     'IF ret.equals("Conflicting")',
-     'OR',
-     'ret.equals("Checkout Conflict")'
-   ],
-   failedCondition: [
-     'BIND ret = $!.getMergeStatus().toString()',
-     'IF ret.equals("Failed")',
-     'OR',
-     'ret.equals("Aborted")',
-     'OR',
-     'ret.equals("Not-yet-supported")'
-   ]
- },
- {
-   template: '$ExtendedTemplate',
-   class: 'RebaseCommand',
-   start: '[rebase] Start rebase: ',
-   end: '[rebase] Rebased branch successfully: ',
-   error: '[rebase] An error occurred while rebase: ',
-   conflict: '[rebase] Rebase branch conflicted: ',
-   failed: '[rebase] Rebase branch failed: ',
-   var: '$0.getRepository().getBranch()',
-   normalCondition: [
-     'BIND ret = $!.getStatus().toString()',
-     'IF ret.equals("OK")',
-     'OR',
-     'ret.equals("UP_TO_DATE")',
-     'OR',
-     'ret.equals("FAST_FORWARD")',
-     'OR',
-     'ret.equals("NOTHING_TO_COMMIT")'
-   ],
-   conflictCondition: [
-     'BIND ret = $!.getStatus().toString()',
-     'IF ret.equals("CONFLICTS")',
-     'OR',
-     'ret.equals("STASH_APPLY_CONFLICTS")'
-   ],
-   failedCondition: [
-     'BIND ret = $!.getStatus().toString()',
-     'IF ret.equals("ABORTED")',
-     'OR',
-     'ret.equals("STOPPED")',
-     'OR',
-     'ret.equals("EDIT")',
-     'OR',
-     'ret.equals("FAILED")',
-     'OR',
-     'ret.equals("UNCOMMITTED_CHANGES")',
-     'OR',
-     'ret.equals("INTERACTIVE_PREPARED")'
-   ]
- }
-]
-'@
-
-ConvertFrom-Json $JSON2 | ForEach-Object { $_ } `
+ConvertFrom-Json $ExtendedJSON | ForEach-Object { $_ } `
     | ForEach-Object { 
         $template = $_.template;
         (Invoke-Expression "Write-Output $template") -F $LogHeader, $_.class, $_.start, $_.end, $_.error, $_.var, ($_.normalCondition -join "`n"), ($_.conflictCondition -join "`n"), $_.conflict, ($_.failedCondition -join "`n"), $_.failed
