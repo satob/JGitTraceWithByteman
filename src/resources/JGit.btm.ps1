@@ -1,7 +1,9 @@
+# Header wrote before log body
 $LogHeader = @'
 java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName()
 '@
 
+# Template without detailed conditions
 $StandardTemplate = @'
 #############################################################################
 # {1}
@@ -58,6 +60,7 @@ ENDRULE
 '@
 
 
+# Template with detailed conditions (normal/conflict/failed)
 $ExtendedTemplate = @'
 #############################################################################
 # {1}
