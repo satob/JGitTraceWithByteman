@@ -356,6 +356,57 @@ ENDRULE
 
 
 #############################################################################
+# ResetCommand
+#############################################################################
+RULE ResetCommand Open
+CLASS org.eclipse.jgit.api.ResetCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE ResetCommand Start
+CLASS org.eclipse.jgit.api.ResetCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][reset] Start reset to remote: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
+ENDRULE
+
+RULE ResetCommand End
+CLASS org.eclipse.jgit.api.ResetCommand
+METHOD call
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][reset] Reset successfully: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
+ENDRULE
+
+RULE ResetCommand Error
+CLASS org.eclipse.jgit.api.ResetCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][reset] An error occurred while reset: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE ResetCommand Close
+CLASS org.eclipse.jgit.api.ResetCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
 # CherryPickCommand
 #############################################################################
 RULE CherryPickCommand Open

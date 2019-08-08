@@ -104,6 +104,13 @@ $JSON = @'
    end: '[push] Pushed to remote successfully: ',
    error: '[push] An error occurred while push: ',
    var: '$0.getRepository().getBranch() + " -> " + $0.getRemote()'
+ },
+ {
+   class: 'ResetCommand',
+   start: '[reset] Start reset to remote: ',
+   end: '[reset] Reset successfully: ',
+   error: '[reset] An error occurred while reset: ',
+   var: '$0.getRepository().getBranch() + " / " + $0.getRefOrHEAD()'
  }
 ]
 '@
