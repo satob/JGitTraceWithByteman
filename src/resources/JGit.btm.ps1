@@ -97,6 +97,13 @@ $JSON = @'
    end: '[pull] Pulled from remote successfully: ',
    error: '[pull] An error occurred while pull: ',
    var: '$0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName()'
+ },
+ {
+   class: 'PushCommand',
+   start: '[push] Start push to remote: ',
+   end: '[push] Pushed to remote successfully: ',
+   error: '[push] An error occurred while push: ',
+   var: '$0.getRepository().getBranch() + " -> " + $0.getRemote()'
  }
 ]
 '@
