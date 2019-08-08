@@ -90,6 +90,13 @@ $JSON = @'
    end: '[fetch] Fetched from remote successfully: ',
    error: '[fetch] An error occurred while fetch from remote: ',
    var: '$0.getRemote() + " -> " + $0.getRepository().getBranch()'
+ },
+ {
+   class: 'PullCommand',
+   start: '[pull] Start pull from remote: ',
+   end: '[pull] Pulled from remote successfully: ',
+   error: '[pull] An error occurred while pull: ',
+   var: '$0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName()'
  }
 ]
 '@

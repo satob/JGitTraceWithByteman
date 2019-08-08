@@ -254,6 +254,57 @@ ENDRULE
 
 
 #############################################################################
+# PullCommand
+#############################################################################
+RULE PullCommand Open
+CLASS org.eclipse.jgit.api.PullCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE PullCommand Start
+CLASS org.eclipse.jgit.api.PullCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][pull] Start pull from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
+ENDRULE
+
+RULE PullCommand End
+CLASS org.eclipse.jgit.api.PullCommand
+METHOD call
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][pull] Pulled from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
+ENDRULE
+
+RULE PullCommand Error
+CLASS org.eclipse.jgit.api.PullCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][pull] An error occurred while pull: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE PullCommand Close
+CLASS org.eclipse.jgit.api.PullCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
 # CherryPickCommand
 #############################################################################
 RULE CherryPickCommand Open
