@@ -283,6 +283,102 @@ ENDRULE
 
 '@
 
+$RebaseCommand = @'
+#############################################################################
+# RebaseCommand
+#############################################################################
+RULE RebaseCommand Open
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE RebaseCommand Start
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][rebase] Start rebase: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE RebaseCommand End
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("OK")
+OR
+ret.equals("UP_TO_DATE")
+OR
+ret.equals("FAST_FORWARD")
+OR
+ret.equals("NOTHING_TO_COMMIT")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][rebase] Rebased branch successfully: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE RebaseCommand Conflicting
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("CONFLICTS")
+OR
+ret.equals("STASH_APPLY_CONFLICTS")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][rebase] Rebase branch conflicted: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE RebaseCommand Failed
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getStatus().toString()
+IF ret.equals("ABORTED")
+OR
+ret.equals("STOPPED")
+OR
+ret.equals("EDIT")
+OR
+ret.equals("FAILED")
+OR
+ret.equals("UNCOMMITTED_CHANGES")
+OR
+ret.equals("INTERACTIVE_PREPARED")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][rebase] Rebase branch failed: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE RebaseCommand Error
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][rebase] An error occurred while rebase: " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE RebaseCommand Close
+CLASS org.eclipse.jgit.api.RebaseCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+
+'@
+
 ConvertFrom-Json $JSON | ForEach-Object { $_ } | ForEach-Object { ($Template -F $_.class, $_.start, $_.end, $_.error, $_.var) } `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Set-Content -Path ".\JGit.btm" -Encoding Byte
@@ -294,3 +390,10 @@ $CherryPickCommand `
 $MergeCommand `
     | % { [Text.Encoding]::UTF8.GetBytes($_) } `
     | Add-Content -Path ".\JGit.btm" -Encoding Byte
+
+$RebaseCommand `
+    | % { [Text.Encoding]::UTF8.GetBytes($_) } `
+    | Add-Content -Path ".\JGit.btm" -Encoding Byte
+
+
+
