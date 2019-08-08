@@ -25,7 +25,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][checkout] Checkout branch successfully: " + $0.name);
+  traceln("log", "[End][checkout] Checkouted branch successfully: " + $0.name);
 ENDRULE
 
 RULE CheckoutCommand Error
@@ -76,7 +76,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][clone] Clone repository successfully: " + $0.uri + " -> " + $0.branch);
+  traceln("log", "[End][clone] Cloned repository successfully: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
 RULE CloneCommand Error
@@ -127,7 +127,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][branch] Create local branch successfully: " + $0.startPoint + " -> " + $0.name);
+  traceln("log", "[End][branch] Created local branch successfully: " + $0.startPoint + " -> " + $0.name);
 ENDRULE
 
 RULE CreateBranchCommand Error
@@ -178,7 +178,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][commit] Commit to branch successfully: " + $0.getRepository().getBranch());
+  traceln("log", "[End][commit] Commited to branch successfully: " + $0.getRepository().getBranch());
 ENDRULE
 
 RULE CommitCommand Error
@@ -229,7 +229,7 @@ AT EXIT
 IF true
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][fetch] Fetch from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+  traceln("log", "[End][fetch] Fetched from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
 RULE FetchCommand Error
@@ -281,7 +281,7 @@ BIND ret = $!.getStatus().toString()
 IF ret.equals("Ok")
 DO
   trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
-  traceln("log", "[End][cherry-pick] Cherry-pick commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceln("log", "[End][cherry-pick] Cherry-picked commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
 ENDRULE
 
 RULE CherryPickCommand Conflicting
@@ -320,6 +320,98 @@ ENDRULE
 
 RULE CherryPickCommand Close
 CLASS org.eclipse.jgit.api.CherryPickCommand
+METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
+# MergeCommand
+#############################################################################
+RULE MergeCommand Open
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+IF true
+DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
+ENDRULE
+
+RULE MergeCommand Start
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+AT ENTRY
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Start][merge] Start merge: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE MergeCommand End
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getMergeStatus().toString()
+IF ret.equals("Fast-forward")
+OR
+ret.equals("Fast-forward-squashed")
+OR
+ret.equals("Already-up-to-date")
+OR
+ret.equals("Merged")
+OR
+ret.equals("Merged-squashed")
+OR
+ret.equals("Merged-squashed-not-committed")
+OR
+ret.equals("Merged-not-committed")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[End][merge] Merged successfully: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE MergeCommand Conflicting
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getMergeStatus().toString()
+IF ret.equals("Conflicting")
+OR
+ret.equals("Checkout Conflict")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][merge] Merge conflicted: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE MergeCommand Failed
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+AT EXIT
+BIND ret = $!.getMergeStatus().toString()
+IF ret.equals("Failed")
+OR
+ret.equals("Aborted")
+OR
+ret.equals("Not-yet-supported")
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][merge] Merge failed: " + $0.getRepository().getBranch());
+ENDRULE
+
+RULE MergeCommand Error
+CLASS org.eclipse.jgit.api.MergeCommand
+METHOD call
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\t");
+  traceln("log", "[Error][merge] An error occurred while merge: " + $0.getRepository().getBranch());
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE MergeCommand Close
+CLASS org.eclipse.jgit.api.MergeCommand
 METHOD call
 AT EXIT
 IF true
