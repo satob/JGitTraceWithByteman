@@ -65,7 +65,7 @@ METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
   traceln("log", "[Start][clone] Start clone repository: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
@@ -75,7 +75,7 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
   traceln("log", "[End][clone] Cloned repository successfully: " + $0.uri + " -> " + $0.branch);
 ENDRULE
 
@@ -85,7 +85,7 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
   traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri + " -> " + $0.branch);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
@@ -811,6 +811,50 @@ ENDRULE
 RULE RebaseCommand Close
 CLASS org.eclipse.jgit.api.RebaseCommand
 METHOD call
+AT EXIT
+IF true
+DO traceClose("log")
+ENDRULE
+
+
+#############################################################################
+# PushTransport
+#############################################################################
+RULE PushTransport Open
+CLASS org.eclipse.jgit.transport.Transport
+METHOD open(org.eclipse.jgit.lib.Repository, org.eclipse.jgit.transport.URIish, String)
+IF true
+DO
+  traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + $1.getDirectory().getParentFile().getName() + "\t");
+  traceln("log", "[Start][push] Start push to remote: " + $1.getBranch() + " -> " + $2.toString());
+ENDRULE
+
+RULE PushTransport End
+CLASS org.eclipse.jgit.transport.Transport
+METHOD push
+AT EXIT
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + "-" + "\t");
+  traceln("log", "[End][push] Pushed to remote successfully: " + "");
+ENDRULE
+
+RULE PushTransport Error
+CLASS org.eclipse.jgit.transport.Transport
+METHOD push
+AT THROW
+IF true
+DO
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + "-" + "\t");
+  traceln("log", "[Error][push] An error occurred while push: " + "");
+  traceln("log", $^.getMessage());
+  traceStack(null, "log");
+ENDRULE
+
+RULE PushTransport Close
+CLASS org.eclipse.jgit.transport.Transport
+METHOD push
 AT EXIT
 IF true
 DO traceClose("log")
