@@ -1,9 +1,9 @@
-filter Invoke-Ternary ([scriptblock]$decider, [scriptblock]$ifTrue, [scriptblock]$ifFalse) 
+filter Invoke-Ternary ([scriptblock]$decider, [scriptblock]$ifTrue, [scriptblock]$ifFalse)
 {
-    if (& $decider) { 
+    if (& $decider) {
         & $ifTrue
-    } else { 
-        & $ifFalse 
+    } else {
+        & $ifFalse
     }
 }
 Set-Alias ?: Invoke-Ternary -Option AllScope -Description "PSCX filter alias"
@@ -11,7 +11,7 @@ Set-Alias ?: Invoke-Ternary -Option AllScope -Description "PSCX filter alias"
 # Header wrote before log body
 # java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + java.util.Optional.ofNullable($0.getRepository()).map(r -> r.getDirectory().getParentFile().getName()).orElse("-")
 $LogTime = @'
-java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + 
+java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +
 '@
 
 $LogRepoName = @'
@@ -23,21 +23,16 @@ $StandardTemplate = @'
 #############################################################################
 # {1}
 #############################################################################
-RULE {1} Open
-CLASS org.eclipse.jgit.api.{1}
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE {1} Start
 CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT ENTRY
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Start]{2}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} End
@@ -46,8 +41,10 @@ METHOD call
 AT EXIT
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[End]{3}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} Error
@@ -56,18 +53,12 @@ METHOD call
 AT THROW
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Error]{4}" + {5});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE {1} Close
-CLASS org.eclipse.jgit.api.{1}
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
@@ -80,21 +71,16 @@ $ExtendedTemplate = @'
 #############################################################################
 # {1}
 #############################################################################
-RULE {1} Open
-CLASS org.eclipse.jgit.api.{1}
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE {1} Start
 CLASS org.eclipse.jgit.api.{1}
 METHOD call
 AT ENTRY
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Start]{2}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} End
@@ -103,8 +89,10 @@ METHOD call
 AT EXIT
 {6}
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[End]{3}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} Conflicting
@@ -113,8 +101,10 @@ METHOD call
 AT EXIT
 {7}
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Error]{8}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} Failed
@@ -123,8 +113,10 @@ METHOD call
 AT EXIT
 {9}
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Error]{10}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE {1} Error
@@ -133,18 +125,12 @@ METHOD call
 AT THROW
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "\t");
   traceln("log", "[Error]{4}" + {5});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE {1} Close
-CLASS org.eclipse.jgit.api.{1}
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
@@ -352,7 +338,7 @@ $ExtendedJSON = @'
 '@
 
 ConvertFrom-Json $JSON | ForEach-Object { $_ } `
-    | ForEach-Object { 
+    | ForEach-Object {
         $template = $_.template;
         (Invoke-Expression "Write-Output $template") -F ($_.repoexist | ?: {$_ -eq 'true'} {$LogTime + $LogRepoName} {$LogTime + '"-"'}), $_.class, $_.start, $_.end, $_.error, $_.var
       } `
@@ -360,7 +346,7 @@ ConvertFrom-Json $JSON | ForEach-Object { $_ } `
     | Set-Content -Path ".\JGit.btm" -Encoding Byte
 
 ConvertFrom-Json $ExtendedJSON | ForEach-Object { $_ } `
-    | ForEach-Object { 
+    | ForEach-Object {
         $template = $_.template;
         (Invoke-Expression "Write-Output $template") -F ($_.repoexist | ?: {$_ -eq 'true'} {$LogTime + $LogRepoName} {$LogTime + '"-"'}), $_.class, $_.start, $_.end, $_.error, $_.var, ($_.normalCondition -join "`n"), ($_.conflictCondition -join "`n"), $_.conflict, ($_.failedCondition -join "`n"), $_.failed
       } `
@@ -373,14 +359,16 @@ $PushTransport = @'
 #############################################################################
 # PushTransport
 #############################################################################
-RULE PushTransport Open
+RULE PushTransport Start
 CLASS org.eclipse.jgit.transport.{1}
 METHOD open(org.eclipse.jgit.lib.Repository, org.eclipse.jgit.transport.URIish, String)
+AT ENTRY
 IF true
 DO
-  traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + $1.getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start]{2}" + $1.getBranch() + " -> " + $2.toString());
+  traceClose("log");
 ENDRULE
 
 RULE PushTransport End
@@ -389,8 +377,10 @@ METHOD push
 AT EXIT
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "-" + "\t");
   traceln("log", "[End]{3}" + {5});
+  traceClose("log");
 ENDRULE
 
 RULE PushTransport Error
@@ -399,18 +389,12 @@ METHOD push
 AT THROW
 IF true
 DO
+  traceOpen("log","D:\\tmp\\byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
   trace("log", {0} + "-" + "\t");
   traceln("log", "[Error]{4}" + {5});
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE PushTransport Close
-CLASS org.eclipse.jgit.transport.{1}
-METHOD push
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 

@@ -1,21 +1,16 @@
 #############################################################################
 # CheckoutCommand
 #############################################################################
-RULE CheckoutCommand Open
-CLASS org.eclipse.jgit.api.CheckoutCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE CheckoutCommand Start
 CLASS org.eclipse.jgit.api.CheckoutCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][checkout] Start checkout branch: " + $0.name);
+  traceClose("log");
 ENDRULE
 
 RULE CheckoutCommand End
@@ -24,8 +19,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][checkout] Checkouted branch successfully: " + $0.name);
+  traceClose("log");
 ENDRULE
 
 RULE CheckoutCommand Error
@@ -34,39 +31,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][checkout] An error occurred while checkout: " + $0.name);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE CheckoutCommand Close
-CLASS org.eclipse.jgit.api.CheckoutCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # CloneCommand
 #############################################################################
-RULE CloneCommand Open
-CLASS org.eclipse.jgit.api.CloneCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE CloneCommand Start
 CLASS org.eclipse.jgit.api.CloneCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +"-" + "\t");
   traceln("log", "[Start][clone] Start clone repository: " + $0.uri + " -> " + $0.branch);
+  traceClose("log");
 ENDRULE
 
 RULE CloneCommand End
@@ -75,8 +61,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +"-" + "\t");
   traceln("log", "[End][clone] Cloned repository successfully: " + $0.uri + " -> " + $0.branch);
+  traceClose("log");
 ENDRULE
 
 RULE CloneCommand Error
@@ -85,39 +73,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + "-" + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +"-" + "\t");
   traceln("log", "[Error][clone] An error occurred while clone repository: " + $0.uri + " -> " + $0.branch);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE CloneCommand Close
-CLASS org.eclipse.jgit.api.CloneCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # CreateBranchCommand
 #############################################################################
-RULE CreateBranchCommand Open
-CLASS org.eclipse.jgit.api.CreateBranchCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE CreateBranchCommand Start
 CLASS org.eclipse.jgit.api.CreateBranchCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][branch] Start create local branch: " + $0.startPoint + " -> " + $0.name);
+  traceClose("log");
 ENDRULE
 
 RULE CreateBranchCommand End
@@ -126,8 +103,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][branch] Created local branch successfully: " + $0.startPoint + " -> " + $0.name);
+  traceClose("log");
 ENDRULE
 
 RULE CreateBranchCommand Error
@@ -136,39 +115,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][branch] An error occurred while create local branch: " + $0.startPoint + " -> " + $0.name);
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE CreateBranchCommand Close
-CLASS org.eclipse.jgit.api.CreateBranchCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # CommitCommand
 #############################################################################
-RULE CommitCommand Open
-CLASS org.eclipse.jgit.api.CommitCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE CommitCommand Start
 CLASS org.eclipse.jgit.api.CommitCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][commit] Start commit to branch: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CommitCommand End
@@ -177,8 +145,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][commit] Commited to branch successfully: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CommitCommand Error
@@ -187,39 +157,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][commit] An error occurred while commit to branch: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE CommitCommand Close
-CLASS org.eclipse.jgit.api.CommitCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # FetchCommand
 #############################################################################
-RULE FetchCommand Open
-CLASS org.eclipse.jgit.api.FetchCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE FetchCommand Start
 CLASS org.eclipse.jgit.api.FetchCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][fetch] Start fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE FetchCommand End
@@ -228,8 +187,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][fetch] Fetched from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE FetchCommand Error
@@ -238,39 +199,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][fetch] An error occurred while fetch from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE FetchCommand Close
-CLASS org.eclipse.jgit.api.FetchCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # PullCommand
 #############################################################################
-RULE PullCommand Open
-CLASS org.eclipse.jgit.api.PullCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE PullCommand Start
 CLASS org.eclipse.jgit.api.PullCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][pull] Start pull from remote: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
+  traceClose("log");
 ENDRULE
 
 RULE PullCommand End
@@ -279,8 +229,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][pull] Pulled from remote successfully: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
+  traceClose("log");
 ENDRULE
 
 RULE PullCommand Error
@@ -289,39 +241,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][pull] An error occurred while pull: " + $0.getRemote() + " -> " + $0.getRepository().getBranch() + ":" + $0.getRemoteBranchName());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE PullCommand Close
-CLASS org.eclipse.jgit.api.PullCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # PushCommand
 #############################################################################
-RULE PushCommand Open
-CLASS org.eclipse.jgit.api.PushCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE PushCommand Start
 CLASS org.eclipse.jgit.api.PushCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][push] Start push to remote: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
+  traceClose("log");
 ENDRULE
 
 RULE PushCommand End
@@ -330,8 +271,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][push] Pushed to remote successfully: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
+  traceClose("log");
 ENDRULE
 
 RULE PushCommand Error
@@ -340,39 +283,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][push] An error occurred while push: " + $0.getRepository().getBranch() + " -> " + $0.getRemote());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE PushCommand Close
-CLASS org.eclipse.jgit.api.PushCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # ResetCommand
 #############################################################################
-RULE ResetCommand Open
-CLASS org.eclipse.jgit.api.ResetCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE ResetCommand Start
 CLASS org.eclipse.jgit.api.ResetCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][reset] Start reset to remote: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
+  traceClose("log");
 ENDRULE
 
 RULE ResetCommand End
@@ -381,8 +313,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][reset] Reset successfully: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
+  traceClose("log");
 ENDRULE
 
 RULE ResetCommand Error
@@ -391,39 +325,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][reset] An error occurred while reset: " + $0.getRepository().getBranch() + " / " + $0.getRefOrHEAD());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE ResetCommand Close
-CLASS org.eclipse.jgit.api.ResetCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # RevertCommand
 #############################################################################
-RULE RevertCommand Open
-CLASS org.eclipse.jgit.api.RevertCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE RevertCommand Start
 CLASS org.eclipse.jgit.api.RevertCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][revert] Start revert: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RevertCommand End
@@ -432,8 +355,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][revert] Revert successfully: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RevertCommand Error
@@ -442,39 +367,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][revert] An error occurred while revert: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE RevertCommand Close
-CLASS org.eclipse.jgit.api.RevertCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # StashApplyCommand
 #############################################################################
-RULE StashApplyCommand Open
-CLASS org.eclipse.jgit.api.StashApplyCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE StashApplyCommand Start
 CLASS org.eclipse.jgit.api.StashApplyCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][stash apply] Start apply stash to branch: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE StashApplyCommand End
@@ -483,8 +397,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][stash apply] Apply stash to branch successfully: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE StashApplyCommand Error
@@ -493,39 +409,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][stash apply] An error occurred while apply stash to branch: " + $0.getStashId().getName() + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE StashApplyCommand Close
-CLASS org.eclipse.jgit.api.StashApplyCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # StashCreateCommand
 #############################################################################
-RULE StashCreateCommand Open
-CLASS org.eclipse.jgit.api.StashCreateCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE StashCreateCommand Start
 CLASS org.eclipse.jgit.api.StashCreateCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][stash create] Start creating stash: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE StashCreateCommand End
@@ -534,8 +439,10 @@ METHOD call
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][stash create] Created stash successfully: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE StashCreateCommand Error
@@ -544,39 +451,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][stash create] An error occurred while creating stash: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE StashCreateCommand Close
-CLASS org.eclipse.jgit.api.StashCreateCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # CherryPickCommand
 #############################################################################
-RULE CherryPickCommand Open
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE CherryPickCommand Start
 CLASS org.eclipse.jgit.api.CherryPickCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][cherry-pick] Start cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CherryPickCommand End
@@ -586,8 +482,10 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Ok")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][cherry-pick] Cherry-picked commit successfully: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CherryPickCommand Conflicting
@@ -597,8 +495,10 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Conflicting")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit conflicted: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CherryPickCommand Failed
@@ -608,8 +508,10 @@ AT EXIT
 BIND ret = $!.getStatus().toString()
 IF ret.equals("Failed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] Cherry-pick commit failed: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE CherryPickCommand Error
@@ -618,39 +520,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][cherry-pick] An error occurred while cherry-pick: " + $0.ourCommitName + " -> " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE CherryPickCommand Close
-CLASS org.eclipse.jgit.api.CherryPickCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # MergeCommand
 #############################################################################
-RULE MergeCommand Open
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE MergeCommand Start
 CLASS org.eclipse.jgit.api.MergeCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][merge] Start merge: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE MergeCommand End
@@ -672,8 +563,10 @@ ret.equals("Merged-squashed-not-committed")
 OR
 ret.equals("Merged-not-committed")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][merge] Merged successfully: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE MergeCommand Conflicting
@@ -685,8 +578,10 @@ IF ret.equals("Conflicting")
 OR
 ret.equals("Checkout Conflict")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] Merge conflicted: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE MergeCommand Failed
@@ -700,8 +595,10 @@ ret.equals("Aborted")
 OR
 ret.equals("Not-yet-supported")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] Merge failed: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE MergeCommand Error
@@ -710,39 +607,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][merge] An error occurred while merge: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE MergeCommand Close
-CLASS org.eclipse.jgit.api.MergeCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # RebaseCommand
 #############################################################################
-RULE RebaseCommand Open
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-IF true
-DO traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log")
-ENDRULE
-
 RULE RebaseCommand Start
 CLASS org.eclipse.jgit.api.RebaseCommand
 METHOD call
 AT ENTRY
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][rebase] Start rebase: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RebaseCommand End
@@ -758,8 +644,10 @@ ret.equals("FAST_FORWARD")
 OR
 ret.equals("NOTHING_TO_COMMIT")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[End][rebase] Rebased branch successfully: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RebaseCommand Conflicting
@@ -771,8 +659,10 @@ IF ret.equals("CONFLICTS")
 OR
 ret.equals("STASH_APPLY_CONFLICTS")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch conflicted: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RebaseCommand Failed
@@ -792,8 +682,10 @@ ret.equals("UNCOMMITTED_CHANGES")
 OR
 ret.equals("INTERACTIVE_PREPARED")
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] Rebase branch failed: " + $0.getRepository().getBranch());
+  traceClose("log");
 ENDRULE
 
 RULE RebaseCommand Error
@@ -802,32 +694,28 @@ METHOD call
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + $0.getRepository().getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +$0.getRepository().getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Error][rebase] An error occurred while rebase: " + $0.getRepository().getBranch());
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE RebaseCommand Close
-CLASS org.eclipse.jgit.api.RebaseCommand
-METHOD call
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
 #############################################################################
 # PushTransport
 #############################################################################
-RULE PushTransport Open
+RULE PushTransport Start
 CLASS org.eclipse.jgit.transport.Transport
 METHOD open(org.eclipse.jgit.lib.Repository, org.eclipse.jgit.transport.URIish, String)
+AT ENTRY
 IF true
 DO
-  traceOpen("log","byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + $1.getDirectory().getParentFile().getName() + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + + $1.getDirectory().getParentFile().getName() + "\t");
   traceln("log", "[Start][push] Start push to remote: " + $1.getBranch() + " -> " + $2.toString());
+  traceClose("log");
 ENDRULE
 
 RULE PushTransport End
@@ -836,8 +724,10 @@ METHOD push
 AT EXIT
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + "-" + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + + "-" + "\t");
   traceln("log", "[End][push] Pushed to remote successfully: " + "");
+  traceClose("log");
 ENDRULE
 
 RULE PushTransport Error
@@ -846,18 +736,12 @@ METHOD push
 AT THROW
 IF true
 DO
-  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" +  + "-" + "\t");
+  traceOpen("log","D:/tmp/byteman_" + java.net.InetAddress.getLocalHost().getHostName() + "_" + java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE) + ".log");
+  trace("log", java.time.ZonedDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")) + "\t" + + "-" + "\t");
   traceln("log", "[Error][push] An error occurred while push: " + "");
   traceln("log", $^.getMessage());
   traceStack(null, "log");
-ENDRULE
-
-RULE PushTransport Close
-CLASS org.eclipse.jgit.transport.Transport
-METHOD push
-AT EXIT
-IF true
-DO traceClose("log")
+  traceClose("log");
 ENDRULE
 
 
